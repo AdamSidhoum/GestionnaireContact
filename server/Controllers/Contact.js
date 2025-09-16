@@ -3,7 +3,8 @@ const Contact = require('../Models/Contact');
 exports.createContact = (req, res, next) => {
   delete req.body._id;
   const contact = new Contact({
-    ...req.body
+    ...req.body,
+    userId: req.user.id
   });
   contact.save()
     .then(() => res.status(201).json({ message: 'Contact enregistré !'}))
@@ -11,25 +12,25 @@ exports.createContact = (req, res, next) => {
 }
 
 exports.deleteOneContact = (req, res, next) => {
-    Contact.deleteOne({ _id: req.params.id}, {...req.body, _id: req.params.id})
+    Contact.deleteOne({ _id: req.params.id, userId: req.user.id}, {...req.body, _id: req.params.id})
     .then(() => res.status(200).json({message: 'Contact correctement supprimé !'}))
     .catch(error => res.status(400).json({ error }));
 }
 
 exports.modifyContact = (req, res, next) => {
-    Contact.updateOne({ _id: req.params.id}, { ...req.body, _id: req.params.id})
+    Contact.updateOne({ _id: req.params.id, userId: req.user.id}, { ...req.body, _id: req.params.id})
     .then(() => res.status(200).json({message: 'Contact modifié !'}))
     .catch(error => res.status(400).json({ error }));
 }
 
 exports.getOneContact = (req, res, next) => {
-  Contact.findOne({ _id: req.params.id })
+  Contact.findOne({ _id: req.params.id, userId: req.user.id })
     .then(Contact => res.status(200).json(Contact))
     .catch(error => res.status(404).json({ error }));
 }
 
 exports.getAllContact = (req, res, next) => {
-  Contact.find()
+  Contact.find({ userId: req.user.id })
   .then(Contact => res.status(200).json(Contact))
   .catch(error => res.status(400).json({ error }))
 }

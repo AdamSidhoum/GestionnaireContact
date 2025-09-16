@@ -5,6 +5,8 @@ const contactSchema = mongoose.Schema({
     lastname: { type: String, required: true },
     imageUrl: { type: String, required: true },
     num: { type: String, required: true },
+    userId: { type: String, required: true }
+
 });
 
 module.exports = mongoose.model('Contact', contactSchema);
