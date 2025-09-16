@@ -1,0 +1,80 @@
+# GestionnaireContact - Client
+
+Ce dossier contient le code source du client (front) de l'application Gestionnaire de Contacts.
+
+## Prérequis
+
+- Node.js (version recommandée : >= 16)
+- npm ou yarn
+
+## Installation
+
+1. Cloner le dépôt :
+    ```
+    git clone <url-du-repo>
+    ```
+2. Se placer dans le dossier `client` :
+    ```
+    cd client
+    ```
+3. Installer les dépendances principales :
+    ```
+    npm install
+    ```
+    ou
+    ```
+    yarn install
+    ```
+
+4. Installer les dépendances nécessaires au projet :
+    ```
+    npm install axios react-router-dom
+    ```
+    ou
+    ```
+    yarn add axios react-router-dom
+    ```
+
+## Démarrage
+
+Pour lancer l'application en mode développement :
+```
+npm start
+```
+ou
+```
+yarn start
+```
+
+## Structure du projet
+
+- `src/` : Contient le code source React
+- `public/` : Fichiers statiques
+- `package.json` : Dépendances et scripts
+
+## Fonctionnalités principales
+
+- Ajout, modification et suppression de contacts
+- Navigation entre les pages grâce à React Router
+- Communication avec l'API via Axios
+
+## Scripts utiles
+
+- `start` : Démarre le serveur de développement
+- `build` : Génère la version de production
+- `test` : Lance les tests unitaires
+
+## Dépendances principales
+
+- **React** : Bibliothèque principale pour le front-end
+- **axios** : Requêtes HTTP vers l'API
+- **react-router-dom** : Gestion de la navigation
+
+## Conseils
+
+- Vérifiez que le serveur backend est bien lancé avant d'utiliser le client.
+- Modifiez la configuration de l'URL de l'API dans les fichiers concernés si besoin.
+
+## Auteur
+
+- Adam SIDHOUM

@@ -24,8 +24,8 @@ export default function Login() {
 
   return (
     <div>
-      <h2>S'inscrire</h2>
-      <form onSubmit={handleSubmit}>
+      <h2 style={{ margin: "10px" }}>S'inscrire</h2>
+      <form onSubmit={handleSubmit} style={{ margin: "10px" }}>
         <div>
           <label htmlFor="email">Email</label>
           <input 
@@ -49,7 +49,9 @@ export default function Login() {
         {error && <p style={{ color: "red" }}>{error}</p>}
 
         <button type="submit">S'inscrire</button>
-        <button onClick={() =>  navigate('/')}>Se connecter</button>
+        <br></br>
+        Vous avez déjà un compte ?
+        <button onClick={() =>  navigate('/')} style={{ margin: "10px" }}>Se connecter</button>
       </form>
     </div>
   )
