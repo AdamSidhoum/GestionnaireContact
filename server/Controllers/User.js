@@ -11,7 +11,6 @@ exports.signup = (req, res, next) => {
         });
         user.save()
         .then(() => {
-            // Génération du token directement après création
             const token = jwt.sign(
                 { userId: user._id },
                 'RANDOM_TOKEN_SECRET',
