@@ -8,8 +8,8 @@ export default function Contact() {
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
   const [creatingContact, setCreatingContact] = useState({ name: '', lastname: '', num: '', imageUrl: '' });
+  const [token, setToken] = useState(localStorage.getItem("token")); 
 
-  const token = localStorage.getItem("token");
   const apiUrl = "https://gestionnairecontact-2.onrender.com/contact";
   const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ export default function Contact() {
   };
 
   const handleModify = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     axios.put(`${apiUrl}/${editingContact._id}`, editingContact, { headers: { Authorization: `Bearer ${token}` } })
       .then(() => {
         fetchContacts();
@@ -59,6 +59,9 @@ export default function Contact() {
       .catch(err => console.log(err));
   };
 
+  useEffect(() => {
+    setToken(localStorage.getItem("token")); 
+  }, []);
 
   useEffect(() => {
     if (token) fetchContacts();
@@ -69,7 +72,7 @@ export default function Contact() {
       <h2 style={{ margin: "10px" }}>Mes contacts</h2>
       <div>
         <button onClick={handleCreateEdit} style={{ margin: "10px" }}>Ajouter un contact</button>
-        <button onClick={() => { localStorage.setItem("token", null); navigate('/'); }}>Se déconnecter</button>
+        <button onClick={() => { localStorage.setItem("token", null); setToken(null); navigate('/'); }}>Se déconnecter</button>
 
         {contacts.length === 0 && <p>Aucun contact pour l'instant</p>}
 
