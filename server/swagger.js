@@ -13,6 +13,10 @@ const options = {
       {
         url: "http://localhost:3000",
       },
+      {
+        url: "https://gestionnairecontact-2.onrender.com",
+        description: "Serveur en ligne (Render)",
+      },
     ],
     components: {
       securitySchemes: {
