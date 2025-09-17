@@ -1,78 +1,92 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 export default function Contact() {
   const [contacts, setContacts] = useState([]);
-
-  const [editingContact, setEditingContact] = useState(null); 
+  const [editingContact, setEditingContact] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
   const [showModal2, setShowModal2] = useState(false);
-  const [creatingContact, setCreatingContact] = useState({ name: '', lastname: '', num: '', imageUrl: '' });
+  const [creatingContact, setCreatingContact] = useState({ name: "", lastname: "", num: "", imageUrl: "" });
 
   const token = localStorage.getItem("token");
   const apiUrl = "https://gestionnairecontact-2.onrender.com/contact";
   const navigate = useNavigate();
 
   const fetchContacts = () => {
-    console.log("token = ", token);
-    axios.get(apiUrl, { headers: { Authorization: `Bearer ${token}` } })
-      .then(res => setContacts(res.data))
-      .catch(err => console.log(err));
+    axios
+      .get(apiUrl, { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => setContacts(res.data))
+      .catch((err) => console.error(err));
   };
 
 
-    const handleDelete = (id) => {
-    axios.delete(`${apiUrl}/${id}`, { headers: { Authorization: `Bearer ${token}` } })
+  const handleDelete = (id) => {
+    axios
+      .delete(`${apiUrl}/${id}`, { headers: { Authorization: `Bearer ${token}` } })
       .then(() => fetchContacts())
-      .catch(err => console.log(err));
+      .catch((err) => console.error(err));
   };
 
-    const handleEdit = (contact) => {
+
+  const handleEdit = (contact) => {
     setEditingContact(contact);
     setShowModal(true);
   };
 
-    const handleModify = (e) => {
-        axios.put(`${apiUrl}/${editingContact._id}`, editingContact, { headers: { Authorization: `Bearer ${token}` } })
-        .then(() => {
-            fetchContacts()
-            setShowModal(false)
-            setEditingContact(null)
-        })
-        
-      .catch(err => console.log(err));
-    };
+  const handleModify = (e) => {
+    e.preventDefault(); // Bloque le reload
+    if (!editingContact) return;
 
-    const handleCreateEdit = () => {
-        setCreatingContact({ name: '', lastname: '', num: '', imageUrl: '' });
-        setShowModal2(true);
-    };
-
-    const handleCreatingContact = (e) => {
-          e.preventDefault(); 
-
-        axios.post(apiUrl, creatingContact, { headers: { Authorization: `Bearer ${token}` } })
-        .then(() => {
-            fetchContacts()
-            setShowModal2(false)
-            setCreatingContact(null)
-        })
-              .catch(err => console.log(err));
-    };
-
-    useEffect(() => {
+    axios
+      .put(`${apiUrl}/${editingContact._id}`, editingContact, { headers: { Authorization: `Bearer ${token}` } })
+      .then(() => {
         fetchContacts();
+        setShowModal(false);
+        setEditingContact(null);
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const handleCreateEdit = () => {
+    setCreatingContact({ name: "", lastname: "", num: "", imageUrl: "" });
+    setShowModal2(true);
+  };
+
+  const handleCreatingContact = (e) => {
+    e.preventDefault();
+    axios
+      .post(apiUrl, creatingContact, { headers: { Authorization: `Bearer ${token}` } })
+      .then(() => {
+        fetchContacts();
+        setShowModal2(false);
+        setCreatingContact({ name: "", lastname: "", num: "", imageUrl: "" });
+      })
+      .catch((err) => console.error(err));
+  };
+
+  useEffect(() => {
+    fetchContacts();
   }, []);
 
   return (
     <div>
       <h2 style={{ margin: "10px" }}>Mes contacts</h2>
-        <div>
-            <button onClick={() => handleCreateEdit()} style={{ margin: "10px" }}>Ajouter un contact</button>
-            <button onClick={() =>  {localStorage.setItem("token", null); navigate('/');}}>Se déconnecter</button>
-         {contacts.length === 0 && <p>Aucun contact pour l'instant</p>}
+      <div>
+        <button onClick={handleCreateEdit} style={{ margin: "10px" }}>
+          Ajouter un contact
+        </button>
+        <button
+          onClick={() => {
+            localStorage.removeItem("token");
+            navigate("/");
+          }}
+        >
+          Se déconnecter
+        </button>
+
+        {contacts.length === 0 && <p>Aucun contact pour l'instant</p>}
+
         {contacts.map((contact) => (
           <div key={contact._id} style={{ border: "1px solid gray", margin: "10px", padding: "10px" }}>
             <img src={contact.imageUrl} alt={contact.name} width="100" />
@@ -80,78 +94,103 @@ export default function Contact() {
               {contact.name} {contact.lastname}
             </h3>
             <p>📞 {contact.num}</p>
-            <div>
-            </div>
-            {<button onClick={() => handleEdit(contact)}>Modifier le contact</button>}
-            {<button onClick={() => handleDelete(contact._id)} style={{ margin: "10px" }}>Supprimer le contact</button>}
-
-            {<button>Voir le contact : soon</button>}
+            <button onClick={() => handleEdit(contact)}>Modifier le contact</button>
+            <button onClick={() => handleDelete(contact._id)} style={{ margin: "10px" }}>
+              Supprimer le contact
+            </button>
+            <button disabled>Voir le contact : soon</button>
           </div>
         ))}
-        </div>
+      </div>
 
-        {showModal && (
-        <div style={{
-          position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
-          background: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "center"
-        }}>
+ 
+      {showModal && editingContact && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <form style={{ background: "white", padding: "20px" }} onSubmit={handleModify}>
             <h3>Modifier le contact</h3>
-            <input 
-              placeholder="Nom" 
-              value={editingContact.name} 
-              onChange={e => setEditingContact({ ...editingContact, name: e.target.value })}
+            <input
+              placeholder="Nom"
+              value={editingContact.name}
+              onChange={(e) => setEditingContact({ ...editingContact, name: e.target.value })}
             />
-            <input 
-              placeholder="Prénom" 
-              value={editingContact.lastname} 
-              onChange={e => setEditingContact({ ...editingContact, lastname: e.target.value })}
+            <input
+              placeholder="Prénom"
+              value={editingContact.lastname}
+              onChange={(e) => setEditingContact({ ...editingContact, lastname: e.target.value })}
             />
-            <input 
-              placeholder="Numéro" 
-              value={editingContact.num} 
-              onChange={e => setEditingContact({ ...editingContact, num: e.target.value })}
+            <input
+              placeholder="Numéro"
+              value={editingContact.num}
+              onChange={(e) => setEditingContact({ ...editingContact, num: e.target.value })}
             />
-            <input 
-              placeholder="URL image" 
-              value={editingContact.imageUrl} 
-              onChange={e => setEditingContact({ ...editingContact, imageUrl: e.target.value })}
+            <input
+              placeholder="URL image"
+              value={editingContact.imageUrl}
+              onChange={(e) => setEditingContact({ ...editingContact, imageUrl: e.target.value })}
             />
-            <button type="submit" onClick={() => handleModify}>Valider</button>
-            <button type="button" onClick={() => setShowModal(false)}>Annuler</button>
+            <button type="submit">Valider</button>
+            <button type="button" onClick={() => setShowModal(false)}>
+              Annuler
+            </button>
           </form>
         </div>
       )}
 
       {showModal2 && (
-        <div style={{
-          position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
-          background: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "center"
-        }}>
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <form style={{ background: "white", padding: "20px" }} onSubmit={handleCreatingContact}>
             <h3>Ajouter un contact</h3>
-            <input 
-              placeholder="Nom" 
-              onChange={e => setCreatingContact({ ...creatingContact, name: e.target.value })}
+            <input
+              placeholder="Nom"
+              value={creatingContact.name}
+              onChange={(e) => setCreatingContact({ ...creatingContact, name: e.target.value })}
             />
-            <input 
-              placeholder="Prénom" 
-              onChange={e => setCreatingContact({ ...creatingContact, lastname: e.target.value })}
+            <input
+              placeholder="Prénom"
+              value={creatingContact.lastname}
+              onChange={(e) => setCreatingContact({ ...creatingContact, lastname: e.target.value })}
             />
-            <input 
-              placeholder="Numéro" 
-              onChange={e => setCreatingContact({ ...creatingContact, num: e.target.value })}
+            <input
+              placeholder="Numéro"
+              value={creatingContact.num}
+              onChange={(e) => setCreatingContact({ ...creatingContact, num: e.target.value })}
             />
-            <input 
-              placeholder="URL image" 
-              onChange={e => setCreatingContact({ ...creatingContact, imageUrl: e.target.value })}
+            <input
+              placeholder="URL image"
+              value={creatingContact.imageUrl}
+              onChange={(e) => setCreatingContact({ ...creatingContact, imageUrl: e.target.value })}
             />
-            <button type="submit" onClick={() => handleCreatingContact}>Valider</button>
-            <button type="button" onClick={() => setShowModal2(false)}>Annuler</button>
+            <button type="submit">Valider</button>
+            <button type="button" onClick={() => setShowModal2(false)}>
+              Annuler
+            </button>
           </form>
         </div>
       )}
-
     </div>
-  )
+  );
 }
