@@ -12,7 +12,7 @@ export default function Contact() {
   const [creatingContact, setCreatingContact] = useState({ name: '', lastname: '', num: '', imageUrl: '' });
 
   const token = localStorage.getItem("token");
-  const apiUrl = "http://localhost:3000/contact";
+  const apiUrl = "https://gestionnairecontact-2.onrender.com/contact";
   const navigate = useNavigate();
 
   const fetchContacts = () => {

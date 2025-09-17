@@ -11,7 +11,7 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    axios.post("http://localhost:3000/auth/signup", { email, password })
+    axios.post("https://gestionnairecontact-2.onrender.com/auth/signup", { email, password })
       .then(res => {
         localStorage.setItem("token", res.data.token) 
         navigate("/Contact") 

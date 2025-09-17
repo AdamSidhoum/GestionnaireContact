@@ -11,7 +11,7 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    axios.post("http://localhost:3000/auth/login", { email, password })
+    axios.post("https://gestionnairecontact-2.onrender.com/auth/login", { email, password })
       .then(res => {
         console.log("res data token = ", res.data.token);
         console.log("res data  = ", res.data);
