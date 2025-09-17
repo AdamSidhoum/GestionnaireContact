@@ -57,6 +57,11 @@ Ce dossier contient le serveur backend de l'application GestionnaireContact. Il 
     npm install jsonwebtoken
     ```
 
+7. **Installer les dépendances de test :**
+    ```
+    npm install --save-dev jest supertest @types/jest
+    ```
+
 
 ## Démarrage
 
@@ -68,6 +73,101 @@ ou
 ```
 node server.js
 ```
+
+## Tests
+
+Le projet inclut une suite complète de tests unitaires utilisant Jest pour tester l'authentification et la gestion des contacts.
+
+### Structure des tests
+
+Les tests sont organisés dans le dossier `__tests__/` avec la structure suivante :
+- `__tests__/middleware/` - Tests du middleware d'authentification
+- `__tests__/Controllers/` - Tests des contrôleurs User et Contact
+- `__tests__/Models/` - Tests des modèles User et Contact
+
+### Commandes de test
+
+   **Installer les dépendances de test :**
+   ```
+   npm install --save-dev jest supertest @types/jest
+   ```
+
+   **N'hésitez pas à utiliser --force si ça ne passe pas :**
+   ```
+   npm install --force --save-dev jest supertest @types/jest
+   ```
+
+1. **Exécuter tous les tests :**
+   ```
+   npm test
+   ```
+
+2. **Exécuter les tests en mode watch (surveillance) :**
+   ```
+   npm run test:watch
+   ```
+
+3. **Exécuter les tests avec rapport de couverture :**
+   ```
+   npm run test:coverage
+   ```
+
+### Types de tests inclus
+
+#### Tests d'authentification (`auth.test.js`)
+- Validation des tokens JWT valides
+- Gestion des tokens invalides ou expirés
+- Gestion des headers Authorization manquants ou malformés
+- Extraction correcte des tokens du format "Bearer token"
+
+#### Tests des contrôleurs User (`User.test.js`)
+- **Inscription (signup) :**
+  - Création d'utilisateur avec succès
+  - Gestion des erreurs de hachage bcrypt
+  - Gestion des erreurs de sauvegarde en base
+- **Connexion (login) :**
+  - Connexion avec identifiants valides
+  - Gestion des utilisateurs inexistants
+  - Gestion des mots de passe incorrects
+  - Gestion des erreurs de base de données
+
+#### Tests des contrôleurs Contact (`Contact.test.js`)
+- **Création de contact :**
+  - Création avec succès
+  - Gestion des erreurs de sauvegarde
+- **Suppression de contact :**
+  - Suppression avec succès
+  - Gestion des erreurs de suppression
+- **Modification de contact :**
+  - Modification avec succès
+  - Gestion des erreurs de mise à jour
+- **Récupération de contacts :**
+  - Récupération d'un contact spécifique
+  - Récupération de tous les contacts
+  - Gestion des contacts inexistants
+- **Sécurité :**
+  - Isolation des utilisateurs (chaque utilisateur ne peut accéder qu'à ses propres contacts)
+
+#### Tests des modèles (`User.test.js` et `Contact.test.js`)
+- **Modèle User :**
+  - Validation du schéma avec email unique et mot de passe requis
+  - Validation des emails valides/invalides
+  - Application du plugin uniqueValidator
+- **Modèle Contact :**
+  - Validation du schéma avec tous les champs requis
+  - Validation des différents formats de numéros de téléphone
+  - Validation des URLs d'images
+
+### Configuration Jest
+
+La configuration Jest est définie dans `package.json` :
+- Environnement Node.js
+- Collecte de couverture pour tous les fichiers `.js` (sauf `node_modules` et `coverage`)
+- Recherche des tests dans `__tests__/` et fichiers avec `.spec.js` ou `.test.js`
+
+### Exécution des tests
+
+Après avoir installé les dépendances, vous pouvez exécuter les tests avec les commandes ci-dessus. Les tests utilisent des mocks pour isoler les unités testées et ne nécessitent pas de connexion à une base de données réelle.
 
 ## Auteur
 
